@@ -20,16 +20,12 @@ class UsersTableSeeder extends Seeder
 
         User::create([
             'name' => 'Administrator',
+            'username' => 'administrator',
             'email' => 'admin@test.com',
             'password' => $password,
+            'accountsubscription' => 1,
+            'newsletter' => false,
         ]);
 
-        for ($i = 0; $i < 10; $i++) {
-            User::create([
-                'name' => $faker->name,
-                'email' => $faker->email,
-                'password' => $password,
-            ]);
-        }
     }
 }

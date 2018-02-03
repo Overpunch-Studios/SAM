@@ -20,17 +20,18 @@ namespace SAM_Server
         private void SAM_Main_Load(object sender, EventArgs e)
         {
             VoiceRecognition sam = new VoiceRecognition();
-            while (true)
-            {
-                sam.Recognize();
-            }
-            //SendRequest();
+            //while (true)
+            //{
+            //    sam.Recognize();
+            //}
+            SendRequest();
         }
 
         private void SendRequest()
         {
             WebRequest request = new WebRequest();
-            string response = request.GetData("https://swapi.co/api/people/1/").name;
+            string apikey = request.PostData("http://127.0.0.1:8000/api/login", "email=admin@test.com&password=toptal").token;
+            string response = request.PostData("http://127.0.0.1:8000/api/user", "api_token=" + apikey).id;
             MessageBox.Show(response);
         }
     }

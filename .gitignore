@@ -131,3 +131,9 @@ $RECYCLE.BIN/
 .DS_Store
 
 _NCrunch*
+
+\.vs/SuperAssistent/v15/Server/sqlite3/storage\.ide-shm
+
+\.vs/SuperAssistent/v15/Server/sqlite3/storage\.ide-wal
+
+\.vs/SuperAssistent/v15/Server/sqlite3/storage\.ide

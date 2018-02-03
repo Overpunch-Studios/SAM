@@ -18,8 +18,17 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 
 Route::post('register', 'Auth\RegisterController@register');
+Route::get('register', function() {
+    return redirect('/');
+});
 Route::post('login', 'Auth\LoginController@login');
+Route::get('login', function() {
+    return redirect('/');
+});
 Route::post('logout', 'Auth\LoginController@logout');
+Route::get('logout', function() {
+    return redirect('/');
+});
 
 Route::group(['middleware' => 'auth:api'], function() {
     Route::get('/devices/{id}', 'DeviceControllerApi@show');

@@ -31,8 +31,10 @@ Route::get('logout', function() {
 });
 
 Route::group(['middleware' => 'auth:api'], function() {
+    Route::post('/devices/', 'DeviceControllerApi@index');
     Route::post('/devices/{id}', 'DeviceControllerApi@show');
 
+    Route::post('/commands/', 'CommandControllerApi@index');
     Route::post('/commands/{id}', 'CommandControllerApi@show');
 });
 

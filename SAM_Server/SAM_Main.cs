@@ -19,12 +19,14 @@ namespace SAM_Server
 
         private void SAM_Main_Load(object sender, EventArgs e)
         {
+            Login();
             VoiceRecognition sam = new VoiceRecognition();
-            //while (true)
-            //{
-            //    sam.Recognize();
-            //}
-            SendRequest();
+            while (true)
+            {
+                sam.Recognize();
+            }
+            //SendRequest();
+            
         }
 
         private void SendRequest()
@@ -33,6 +35,16 @@ namespace SAM_Server
             string apikey = request.PostData("http://127.0.0.1:8000/api/login", "email=admin@test.com&password=toptal").token;
             string response = request.PostData("http://127.0.0.1:8000/api/user", "api_token=" + apikey).id;
             MessageBox.Show(response);
+        }
+
+        private void Login()
+        {
+            WebRequest request = new WebRequest();
+            string apikey = request.PostData("http://127.0.0.1:8000/api/login", "email=admin@test.com&password=toptal").token;
+            dynamic result = request.PostData("http://127.0.0.1:8000/api/user", "api_token=" + apikey);
+            Program.user.id = result.id;
+            Program.user.username = result.username;
+            Program.user.token = apikey;
         }
     }
 }

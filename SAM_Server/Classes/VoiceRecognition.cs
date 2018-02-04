@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Speech.Recognition;
 using System.Speech.Synthesis;
+using System.Windows.Forms;
 
 namespace SAM_Server
 {
@@ -13,9 +14,9 @@ namespace SAM_Server
         SpeechRecognitionEngine SAM = new SpeechRecognitionEngine();
         Grammar SAM_BasicGrammar;
         
-        public VoiceRecognition()
+        public VoiceRecognition(string setting = "basic")
         {
-            SAM_BasicGrammar = SetupGrammar();
+            SAM_BasicGrammar = SetupGrammar(setting);
             SAM.LoadGrammar(SAM_BasicGrammar);
             SAM.SetInputToDefaultAudioDevice();
             SAM.SpeechRecognized += Recognized;
@@ -30,21 +31,57 @@ namespace SAM_Server
         {
             SpeechSynthesizer synth = new SpeechSynthesizer();
             synth.SetOutputToDefaultAudioDevice();
-            synth.Speak("Yes?");
+            synth.Speak(GetResponse(e.Result.Text.ToString()));
             //TODO: Get the response of the recognized speech of database
             
         }
 
-        private Grammar SetupGrammar()
+        private Grammar SetupGrammar(string setting)
         {
             Choices choices = new Choices();
-            choices.Add("Sam"/* TODO: get commands of database*/);
-
+            switch (setting)
+            {
+                case "basic":
+                    choices.Add("Sam"/* TODO: get commands of database*/);
+                    break;
+                case "advanced":
+                    choices.Add(GetChoises());
+                    break;
+            }
+            
             GrammarBuilder gb = new GrammarBuilder();
             gb.Append(choices);
             
             return new Grammar(gb);
         }
 
+        private string GetResponse(string input)
+        {
+            string result = "Response not found.";
+
+            for (int i = 0; i < Program.commands.Length; i++)
+            {
+                if (Program.commands[i].request == input)
+                {
+                    result = Program.commands[i].response;
+                    break;
+                }
+            }
+
+            return result;
+        }
+
+        private string[] GetChoises()
+        {
+            int commandsCount = Program.commands.Length;
+            string[] output = new string[commandsCount];
+
+            for (int i = 0; i < commandsCount; i++)
+            {
+                output[i] = Program.commands[i].request;
+            }
+
+            return output;
+        }
     }
 }

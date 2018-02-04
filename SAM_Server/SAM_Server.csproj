@@ -60,6 +60,8 @@
     <Compile Include="Classes\SocketHandler.cs" />
     <Compile Include="Classes\WebRequest.cs" />
     <Compile Include="Classes\VoiceRecognition.cs" />
+    <Compile Include="Models\Command.cs" />
+    <Compile Include="Models\User.cs" />
     <Compile Include="SAM_Main.cs">
       <SubType>Form</SubType>
     </Compile>

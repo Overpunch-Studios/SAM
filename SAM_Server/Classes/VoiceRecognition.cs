@@ -75,12 +75,15 @@ namespace SAM_Server
         {
             string result = "Response not found.";
 
-            for (int i = 0; i < Program.commands.Length; i++)
+            for (int j = 0; j < Program.devices.Length; j++)
             {
-                if (Program.devices[i].ip + " " + Program.commands[i].request == input || Program.devices[i].name + " " + Program.commands[i].request == input)
+                for (int i = 0; i < Program.commands.Length; i++)
                 {
-                    result = Program.commands[i].response;
-                    break;
+                    if (Program.devices[j].ip + " " + Program.commands[i].request == input || Program.devices[j].name + " " + Program.commands[i].request == input)
+                    {
+                        result = Program.commands[i].response;
+                        break;
+                    }
                 }
             }
 

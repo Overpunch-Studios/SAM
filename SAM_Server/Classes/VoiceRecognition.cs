@@ -44,7 +44,7 @@ namespace SAM_Server
                     choices.Add("Sam"/* TODO: get commands of database*/);
                     break;
                 case "advanced":
-                    choices.Add(GetCommands());
+                    choices.Add("sam");
                     break;
             }
             
@@ -54,18 +54,7 @@ namespace SAM_Server
             return new Grammar(gb);
         }
 
-        private string[] GetCommands()
-        {
-            string[] output = new string[2];
-            /*WebRequest request = new WebRequest();
-
-            dynamic result = request.PostData("http://127.0.0.1:8000/commands", "api_token=" + Program.user.token);*/
-
-            output[0] = "exit";
-            output[1] = "sam";
-
-            return output;
-        }
+        
 
     }
 }

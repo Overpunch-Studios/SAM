@@ -20,7 +20,8 @@ namespace SAM_Server
         private void SAM_Main_Load(object sender, EventArgs e)
         {
             Login();
-            VoiceRecognition sam = new VoiceRecognition();
+            GetCommands();
+            VoiceRecognition sam = new VoiceRecognition("advanced");
             while (true)
             {
                 sam.Recognize();
@@ -45,6 +46,16 @@ namespace SAM_Server
             Program.user.id = result.id;
             Program.user.username = result.username;
             Program.user.token = apikey;
+        }
+
+        private void GetCommands()
+        {
+            Models.Command[] commands = new Models.Command[1];
+            WebRequest request = new WebRequest();
+
+            dynamic result = request.PostData("http://127.0.0.1:8000/api/commands", "api_token=" + Program.user.token);
+
+
         }
     }
 }

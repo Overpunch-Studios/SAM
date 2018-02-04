@@ -10,6 +10,7 @@ namespace SAM_Server
     static class Program
     {
         public static User user;
+        public static Device[] devices;
         public static Command[] commands;
 
         /// <summary>

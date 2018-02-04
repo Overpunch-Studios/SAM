@@ -30,7 +30,7 @@ namespace SAM_Server
         {
             SpeechSynthesizer synth = new SpeechSynthesizer();
             synth.SetOutputToDefaultAudioDevice();
-            synth.Speak("Yes?");
+            synth.Speak(GetResponse(e.Result.Text.ToString()));
             //TODO: Get the response of the recognized speech of database
             
         }
@@ -44,7 +44,7 @@ namespace SAM_Server
                     choices.Add("Sam"/* TODO: get commands of database*/);
                     break;
                 case "advanced":
-                    choices.Add("sam");
+                    choices.Add(GetChoises());
                     break;
             }
             
@@ -54,7 +54,33 @@ namespace SAM_Server
             return new Grammar(gb);
         }
 
-        
+        private string GetResponse(string input)
+        {
+            string result = "Response not found.";
 
+            for (int i = 0; i < Program.commands.Length; i++)
+            {
+                if (Program.commands[i].request == input)
+                {
+                    result = Program.commands[i].response;
+                    break;
+                }
+            }
+
+            return result;
+        }
+
+        private string[] GetChoises()
+        {
+            int commandsCount = Program.commands.Length;
+            string[] output = new string[commandsCount];
+
+            for (int i = 0; i < commandsCount; i++)
+            {
+                output[i] = Program.commands[i].request;
+            }
+
+            return output;
+        }
     }
 }

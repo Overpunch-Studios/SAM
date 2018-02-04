@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SAM_Server.Models;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -50,12 +51,26 @@ namespace SAM_Server
 
         private void GetCommands()
         {
-            Models.Command[] commands = new Models.Command[1];
+            Command[] commands = new Command[1];
             WebRequest request = new WebRequest();
 
-            dynamic result = request.PostData("http://127.0.0.1:8000/api/commands", "api_token=" + Program.user.token);
+            string ids = request.PostData("http://127.0.0.1:8000/api/commands/range", "api_token=" + Program.user.token).ids;
+            string[] idsArr = ids.Split(',');
 
+            commands = new Command[idsArr.Length];
 
+            for(int i = 0; i < idsArr.Length; i++)
+            {
+                commands[i] = new Command();
+
+                dynamic result = request.PostData("http://127.0.0.1:8000/api/commands/" + idsArr[i], "api_token=" + Program.user.token);
+
+                commands[i].id = result.id;
+                commands[i].request = result.request;
+                commands[i].response = result.response;
+            }
+
+            Program.commands = commands;
         }
     }
 }

@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Chat;
+use App\Command;
 use Illuminate\Http\Request;
 
 class CommandControllerApi extends Controller
 {
     public function show($id) {
-        $command = Chat::find($id);
+        $command = Command::find($id);
 
         return $command;
     }

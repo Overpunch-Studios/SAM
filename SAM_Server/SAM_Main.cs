@@ -22,6 +22,7 @@ namespace SAM_Server
         {
             Login();
             GetCommands();
+            GetDevices();
             VoiceRecognition sam = new VoiceRecognition("advanced");
             while (true)
             {
@@ -71,6 +72,35 @@ namespace SAM_Server
             }
 
             Program.commands = commands;
+        }
+
+        private void GetDevices()
+        {
+            Device[] devices = new Device[1];
+            WebRequest request = new WebRequest();
+
+            string ids = request.PostData("http://127.0.0.1:8000/api/devices/range", "api_token=" + Program.user.token).ids;
+            string[] idsArr = ids.Split(',');
+
+            devices = new Device[idsArr.Length];
+
+            for (int i = 0; i < idsArr.Length; i++)
+            {
+                devices[i] = new Device();
+                devices[i].user = new User();
+                dynamic result = request.PostData("http://127.0.0.1:8000/api/devices/" + idsArr[i], "api_token=" + Program.user.token);
+
+                devices[i].id = result.id;
+                devices[i].ip = result.ip;
+                devices[i].name = result.name;
+                devices[i].user.id = result.user.id;
+                devices[i].user.username = result.user.username;
+                devices[i].user.token = "EMPTY";
+            }
+
+            Program.devices = devices;
+
+            MessageBox.Show($"There are {Program.devices.Length} devices available");
         }
 
         private void SAM_Main_Resize(object sender, EventArgs e)

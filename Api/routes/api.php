@@ -13,17 +13,29 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
+Route::middleware('auth:api')->post('/user', function (Request $request) {
     return $request->user();
 });
 
 Route::post('register', 'Auth\RegisterController@register');
+Route::get('register', function() {
+    return redirect('/');
+});
 Route::post('login', 'Auth\LoginController@login');
+Route::get('login', function() {
+    return redirect('/');
+});
 Route::post('logout', 'Auth\LoginController@logout');
+Route::get('logout', function() {
+    return redirect('/');
+});
 
 Route::group(['middleware' => 'auth:api'], function() {
-    Route::get('/devices/{id}', 'DeviceControllerApi@show');
+    Route::post('/devices/', 'DeviceControllerApi@index');
+    Route::post('/devices/{id}', 'DeviceControllerApi@show');
 
-    Route::get('/commands/{id}', 'CommandControllerApi@show');
+    Route::post('/commands/', 'CommandControllerApi@index');
+    Route::post('/commands/range', 'CommandControllerApi@range');
+    Route::post('/commands/{id}', 'CommandControllerApi@show');
 });
 

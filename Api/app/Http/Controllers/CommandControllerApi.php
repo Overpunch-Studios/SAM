@@ -2,13 +2,35 @@
 
 namespace App\Http\Controllers;
 
-use App\Chat;
-use Illuminate\Http\Request;
+use App\Command;
 
 class CommandControllerApi extends Controller
 {
+    public function index() {
+        $commands = Command::all();
+
+        return $commands;
+    }
+
+    public function range() {
+        $commands = Command::all();
+        $result = [];
+        $ids = "";
+
+        foreach ($commands as $command)
+        {
+            $ids .= $command->id . ',';
+        }
+
+        $ids = rtrim($ids, ',');
+
+        $result = ['ids'=>$ids];
+
+        return $result;
+    }
+
     public function show($id) {
-        $command = Chat::find($id);
+        $command = Command::find($id);
 
         return $command;
     }

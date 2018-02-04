@@ -11,26 +11,19 @@ namespace SAM_Server
 {
     class SocketHandler
     {
-        string externalIp;
         public Socket server;
         public int port;
         Thread receivingThread;
 
         public SocketHandler()
         {
-            externalIp = GetIp();
-        }
-
-        public string GetIp()
-        {
-            return new WebClient().DownloadString("http://icanhazip.com");
+            port = 8888;
         }
 
         public void StartServer()
         {
-            IPHostEntry ipHostInfo = Dns.GetHostEntry(externalIp);
-            IPAddress ipAddress = ipHostInfo.AddressList[0];
-            IPEndPoint point = new IPEndPoint(ipAddress, port);
+            IPEndPoint point = new IPEndPoint(IPAddress.Any, port);
+            server = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             server.Bind(point);
             server.Listen(1);
         }

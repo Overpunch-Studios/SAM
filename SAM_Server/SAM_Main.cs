@@ -23,10 +23,11 @@ namespace SAM_Server
             Login();
             GetCommands();
             GetDevices();
-            VoiceRecognition sam = new VoiceRecognition("advanced");
-            sam.Recognize();
-            //SendRequest();
             
+            VoiceRecognition sam = new VoiceRecognition("advanced");
+            SocketHandler server = new SocketHandler();
+            sam.Recognize();
+            server.StartServer();
         }
 
         private void SendRequest()

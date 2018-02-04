@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Seeder;
 use App\User;
+use Faker\Factory;
 
 class UsersTableSeeder extends Seeder
 {
@@ -14,7 +15,7 @@ class UsersTableSeeder extends Seeder
     {
         User::truncate();
 
-        $faker = \Faker\Factory::create();
+        $faker = Factory::create();
 
         $password = Hash::make('toptal');
 

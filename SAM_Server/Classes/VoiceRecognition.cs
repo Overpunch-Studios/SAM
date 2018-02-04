@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Speech.Recognition;
 using System.Speech.Synthesis;
 using System.Windows.Forms;
+using System.Threading;
 
 namespace SAM_Server
 {
@@ -13,6 +14,7 @@ namespace SAM_Server
     {
         SpeechRecognitionEngine SAM = new SpeechRecognitionEngine();
         Grammar SAM_BasicGrammar;
+        Thread recognize;
         
         public VoiceRecognition(string setting = "basic")
         {
@@ -24,14 +26,28 @@ namespace SAM_Server
 
         public void Recognize()
         {
-            SAM.Recognize();
+            recognize = new Thread(this.RecognizeThread);
+            recognize.Start();
+        }
+
+        private void RecognizeThread()
+        {
+            while (recognize.IsAlive)
+            {
+                SAM.Recognize();
+            }
+        }
+
+        public void StopRecognizing()
+        {
+            recognize.Abort();
         }
 
         void Recognized(object sender, SpeechRecognizedEventArgs e)
         {
             SpeechSynthesizer synth = new SpeechSynthesizer();
             synth.SetOutputToDefaultAudioDevice();
-            synth.Speak(GetResponse(e.Result.Text.ToString()));
+            synth.SpeakAsync(GetResponse(e.Result.Text.ToString()));
             //TODO: Get the response of the recognized speech of database
             
         }

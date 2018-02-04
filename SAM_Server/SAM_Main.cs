@@ -24,10 +24,7 @@ namespace SAM_Server
             GetCommands();
             GetDevices();
             VoiceRecognition sam = new VoiceRecognition("advanced");
-            while (true)
-            {
-                sam.Recognize();
-            }
+            sam.Recognize();
             //SendRequest();
             
         }

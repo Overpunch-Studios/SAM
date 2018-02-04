@@ -9,5 +9,10 @@ namespace SAM_Server
 {
     class RegistryHandler
     {
+        string programLocation1;
+        string programLocation2;
+        string programLocation3;
+        string programLocation4;
+        string programLocation5;
     }
 }

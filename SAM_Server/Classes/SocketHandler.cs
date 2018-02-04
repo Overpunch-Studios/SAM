@@ -4,10 +4,75 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Net.Sockets;
+using System.Net;
+using System.Threading;
 
 namespace SAM_Server
 {
     class SocketHandler
     {
+        string externalIp;
+        public Socket server;
+        public int port;
+        Thread receivingThread;
+
+        public SocketHandler()
+        {
+            externalIp = GetIp();
+        }
+
+        public string GetIp()
+        {
+            return new WebClient().DownloadString("http://icanhazip.com");
+        }
+
+        public void StartServer()
+        {
+            IPHostEntry ipHostInfo = Dns.GetHostEntry(externalIp);
+            IPAddress ipAddress = ipHostInfo.AddressList[0];
+            IPEndPoint point = new IPEndPoint(ipAddress, port);
+            server.Bind(point);
+            server.Listen(1);
+        }
+
+        public void StartReceiveThread()
+        {
+            receivingThread = new Thread(this.ReceiveData);
+            receivingThread.Start();
+        }
+
+        public void ReceiveData()
+        {
+            while (receivingThread.IsAlive)
+            {
+                string data = null;
+                byte[] bytes = new Byte[1024];
+                Socket handler = server.Accept();
+                data = null;
+                while (true)
+                {
+                    bytes = new byte[1024];
+                    int bytesRec = handler.Receive(bytes);
+                    data = Encoding.ASCII.GetString(bytes, 0, bytesRec);
+
+                    string response = "";
+                    //RUN COMMAND AND GET RESPONSE
+                    SendString(handler, response);
+                    handler.Disconnect(false);
+                    break;
+                }
+            }
+        }
+
+        private void SendString(Socket handler, string message)
+        {
+            byte[] msg = Encoding.ASCII.GetBytes(message);
+            handler.Send(msg);
+        }
+
+        public void StopThread()
+        {
+            receivingThread.Abort();
+        }
     }
 }

@@ -18,12 +18,29 @@ namespace SAM_Server
         }
 
 
-
+        public dynamic PostData(string address, string args)
+        {
+            try
+            {
+                string response = address.PostUrlEncodedAsync(args).ReceiveString().Result;
+                return JsonConvert.DeserializeObject(response);
+            }
+            catch
+            {
+                return null;
+            }
+        }
         public dynamic GetData(string address)
         {
-            string response = address.GetStringAsync().Result;
-            dynamic json = JsonConvert.DeserializeObject(response);
-            return json;
+            try
+            {
+                string response = address.GetStringAsync().Result;
+                return JsonConvert.DeserializeObject(response);
+            }
+            catch
+            {
+                return null;
+            }
         }
     }
 }

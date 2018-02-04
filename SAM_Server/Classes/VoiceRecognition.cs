@@ -15,7 +15,7 @@ namespace SAM_Server
         
         public VoiceRecognition()
         {
-            SAM_BasicGrammar = SetupGrammar();
+            SAM_BasicGrammar = SetupGrammar("basic");
             SAM.LoadGrammar(SAM_BasicGrammar);
             SAM.SetInputToDefaultAudioDevice();
             SAM.SpeechRecognized += Recognized;
@@ -35,11 +35,16 @@ namespace SAM_Server
             
         }
 
-        private Grammar SetupGrammar()
+        private Grammar SetupGrammar(string setting)
         {
             Choices choices = new Choices();
-            choices.Add("Sam"/* TODO: get commands of database*/);
-
+            switch (setting)
+            {
+                case "basic":
+                    choices.Add("Sam"/* TODO: get commands of database*/);
+                    break;
+            }
+            
             GrammarBuilder gb = new GrammarBuilder();
             gb.Append(choices);
             

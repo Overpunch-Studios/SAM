@@ -3,10 +3,15 @@
 namespace App\Http\Controllers;
 
 use App\Command;
-use Illuminate\Http\Request;
 
 class CommandControllerApi extends Controller
 {
+    public function index() {
+        $commands = Command::all();
+
+        return $commands;
+    }
+
     public function show($id) {
         $command = Command::find($id);
 

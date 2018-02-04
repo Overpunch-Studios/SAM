@@ -34,5 +34,19 @@ namespace SAM_Server
             string response = request.PostData("http://127.0.0.1:8000/api/user", "api_token=" + apikey).id;
             MessageBox.Show(response);
         }
+
+        private void SAM_Main_Resize(object sender, EventArgs e)
+        {
+            if (this.WindowState == FormWindowState.Minimized)
+            {
+                this.ShowInTaskbar = false;
+            }
+        }
+
+        private void NotifyIcon_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            this.WindowState = FormWindowState.Normal;
+            this.ShowInTaskbar = true;
+        }
     }
 }

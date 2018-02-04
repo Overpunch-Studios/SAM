@@ -61,7 +61,7 @@ namespace SAM_Server
 
             for (int i = 0; i < Program.commands.Length; i++)
             {
-                if (Program.commands[i].request == input)
+                if (Program.devices[i].ip + " " + Program.commands[i].request == input || Program.devices[i].name + " " + Program.commands[i].request == input)
                 {
                     result = Program.commands[i].response;
                     break;
@@ -74,11 +74,16 @@ namespace SAM_Server
         private string[] GetChoises()
         {
             int commandsCount = Program.commands.Length;
+            int devicesCount = Program.devices.Length;
             string[] output = new string[commandsCount];
 
-            for (int i = 0; i < commandsCount; i++)
+            for (int j = 0; j < devicesCount; j++)
             {
-                output[i] = Program.commands[i].request;
+                for (int i = 0; i < commandsCount; i++)
+                {
+                    output[i] = Program.devices[j].ip + " " + Program.commands[i].request;
+                    output[i] = Program.devices[j].name + " " + Program.commands[i].request;
+                }
             }
 
             return output;

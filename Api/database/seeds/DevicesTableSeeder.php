@@ -21,6 +21,7 @@ class DevicesTableSeeder extends Seeder
             Device::create([
                 'user_id' => $user->id,
                 'ip' => '127.0.0.1',
+                'name' => 'local'
             ]);
         }
     }

@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Speech.Recognition;
 using System.Speech.Synthesis;
 using System.Windows.Forms;
+using System.Threading;
 
 namespace SAM_Server
 {
@@ -13,6 +14,7 @@ namespace SAM_Server
     {
         SpeechRecognitionEngine SAM = new SpeechRecognitionEngine();
         Grammar SAM_BasicGrammar;
+        Thread recognize;
         
         public VoiceRecognition(string setting = "basic")
         {
@@ -24,14 +26,28 @@ namespace SAM_Server
 
         public void Recognize()
         {
-            SAM.Recognize();
+            recognize = new Thread(this.RecognizeThread);
+            recognize.Start();
+        }
+
+        private void RecognizeThread()
+        {
+            while (recognize.IsAlive)
+            {
+                SAM.Recognize();
+            }
+        }
+
+        public void StopRecognizing()
+        {
+            recognize.Abort();
         }
 
         void Recognized(object sender, SpeechRecognizedEventArgs e)
         {
             SpeechSynthesizer synth = new SpeechSynthesizer();
             synth.SetOutputToDefaultAudioDevice();
-            synth.Speak(GetResponse(e.Result.Text.ToString()));
+            synth.SpeakAsync(GetResponse(e.Result.Text.ToString()));
             //TODO: Get the response of the recognized speech of database
             
         }
@@ -59,12 +75,15 @@ namespace SAM_Server
         {
             string result = "Response not found.";
 
-            for (int i = 0; i < Program.commands.Length; i++)
+            for (int j = 0; j < Program.devices.Length; j++)
             {
-                if (Program.commands[i].request == input)
+                for (int i = 0; i < Program.commands.Length; i++)
                 {
-                    result = Program.commands[i].response;
-                    break;
+                    if (Program.devices[j].ip + " " + Program.commands[i].request == input || Program.devices[j].name + " " + Program.commands[i].request == input)
+                    {
+                        result = Program.commands[i].response;
+                        break;
+                    }
                 }
             }
 
@@ -74,11 +93,16 @@ namespace SAM_Server
         private string[] GetChoises()
         {
             int commandsCount = Program.commands.Length;
+            int devicesCount = Program.devices.Length;
             string[] output = new string[commandsCount];
 
-            for (int i = 0; i < commandsCount; i++)
+            for (int j = 0; j < devicesCount; j++)
             {
-                output[i] = Program.commands[i].request;
+                for (int i = 0; i < commandsCount; i++)
+                {
+                    output[i] = Program.devices[j].ip + " " + Program.commands[i].request;
+                    output[i] = Program.devices[j].name + " " + Program.commands[i].request;
+                }
             }
 
             return output;

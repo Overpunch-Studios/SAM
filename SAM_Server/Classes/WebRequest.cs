@@ -17,7 +17,6 @@ namespace SAM_Server
 
         }
 
-
         public dynamic PostData(string address, string args)
         {
             try

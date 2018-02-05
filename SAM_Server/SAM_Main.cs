@@ -13,6 +13,8 @@ namespace SAM_Server
 {
     public partial class SAM_Main : Form
     {
+        VoiceRecognition sam;
+        SocketHandler server;
         public SAM_Main()
         {
             InitializeComponent();
@@ -23,10 +25,11 @@ namespace SAM_Server
             Login();
             GetCommands();
             GetDevices();
-            VoiceRecognition sam = new VoiceRecognition("advanced");
-            sam.Recognize();
-            //SendRequest();
             
+            sam = new VoiceRecognition("advanced");
+            server = new SocketHandler();
+            sam.Recognize();
+            server.StartServer();
         }
 
         private void SendRequest()
@@ -112,6 +115,13 @@ namespace SAM_Server
         {
             this.WindowState = FormWindowState.Normal;
             this.ShowInTaskbar = true;
+        }
+
+        private void SAM_Main_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            notifyIcon.Visible = false;
+            sam.StopRecognizing();
+            server.StopServer();
         }
     }
 }

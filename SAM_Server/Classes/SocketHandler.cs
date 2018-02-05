@@ -18,7 +18,7 @@ namespace SAM_Server
         public SocketHandler()
         {
             IniHandler ini = new IniHandler();
-            port = ini.GetSocketPort();
+            port = ini.GetIntSetting("socketPort");
         }
 
         public void StartServer()
@@ -64,8 +64,9 @@ namespace SAM_Server
             handler.Send(msg);
         }
 
-        public void StopThread()
+        public void StopServer()
         {
+            server.Close();
             receivingThread.Abort();
         }
     }

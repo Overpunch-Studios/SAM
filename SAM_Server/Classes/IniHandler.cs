@@ -11,24 +11,68 @@ namespace SAM_Server
     {
         string defaultIniLocation;
         string iniFileName;
-        List<string> defaultSettings;
+        List<string> settings;
         public IniHandler()
         {
             defaultIniLocation = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + "/SAM/";
             iniFileName = "settings.ini";
-            defaultSettings = new List<string>();
+            settings = new List<string>();
             #region Default Ini Settings
-            defaultSettings.Add("socketPort: 8888");
+            settings.Add("socketPort: 8888");
             #endregion
         }
 
-        public int GetSocketPort()
+        public int GetIntSetting(string setting)
         {
-            string fieldName = "socketPort: ";
-            string str = IniReader(fieldName);
-            int port = 8888;
-            int.TryParse(str.Replace(fieldName, ""), out port);
-            return port;
+            string parseValue = "";
+            int integer = 0;
+            ReloadIni();
+            foreach (string s in settings)
+            {
+                if (s.Contains(setting))
+                {
+                    parseValue = s;
+                }
+            }
+
+            if (parseValue != "")
+            {
+                int.TryParse(parseValue.Replace(setting, "").Replace(": ", ""), out integer);
+            }
+            return integer;
+        }
+
+        public string GetStringSetting(string setting)
+        {
+            string parseValue = "";
+            string value = "";
+            ReloadIni();
+            foreach (string s in settings)
+            {
+                if (s.Contains(setting))
+                {
+                    parseValue = s;
+                }
+            }
+
+            if(parseValue != "")
+            {
+                value = parseValue.Replace(setting, "").Replace(": ", "");
+            }
+            return value;
+        }
+
+        public void ChangeSetting(string setting, string replaceValue)
+        {
+            int i = 0;
+            foreach (string s in settings)
+            {
+                if(s.Contains(setting))
+                {
+                    settings[i] = setting + ": " + replaceValue;
+                }
+                i++;
+            }
         }
 
         private bool IsIniThere()
@@ -39,25 +83,22 @@ namespace SAM_Server
             return false;
         }
 
-        private string IniReader(string lineContains)
+        private void ReloadIni()
         {
             if (IsIniThere())
             {
                 StreamReader reader = new StreamReader(defaultIniLocation + iniFileName);
+                settings.Clear();
                 while (!reader.EndOfStream)
                 {
                     string line = reader.ReadLine();
-                    if (line.Contains(lineContains))
-                    {
-                        return line;
-                    }
+                    settings.Add(line);
                 }
             }
             else
             {
                 CreateDefaultIni();
             }
-            return null;
         }
 
         private void CreateDefaultIni()
@@ -66,7 +107,18 @@ namespace SAM_Server
                 Directory.CreateDirectory(defaultIniLocation);
 
             StreamWriter writer = new StreamWriter(defaultIniLocation + iniFileName);
-            foreach(string defaultSetting in defaultSettings)
+            foreach(string defaultSetting in settings)
+            {
+                writer.WriteLine(defaultSetting);
+            }
+            writer.Close();
+        }
+
+        private void CreateIni()
+        {
+            File.Delete(defaultIniLocation + iniFileName);
+            StreamWriter writer = new StreamWriter(defaultIniLocation + iniFileName);
+            foreach (string defaultSetting in settings)
             {
                 writer.WriteLine(defaultSetting);
             }

@@ -25,34 +25,40 @@ namespace SAM_Server
         {
             IPEndPoint point = new IPEndPoint(IPAddress.Any, port);
             server = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+            server.Blocking = false;
             server.Bind(point);
             server.Listen(1);
+            StartReceiveThread();
         }
 
-        public void StartReceiveThread()
+        private void StartReceiveThread()
         {
             receivingThread = new Thread(this.ReceiveData);
             receivingThread.Start();
         }
 
-        public void ReceiveData()
+        private void ReceiveData()
         {
             while (receivingThread.IsAlive)
             {
                 string data = null;
                 byte[] bytes = new Byte[1024];
-                Socket handler = server.Accept();
+                try
+                {
+                    server.Accept();
+                }
+                catch { }
                 data = null;
-                while (true)
+                while (server.Connected)
                 {
                     bytes = new byte[1024];
-                    int bytesRec = handler.Receive(bytes);
+                    int bytesRec = server.Receive(bytes);
                     data = Encoding.ASCII.GetString(bytes, 0, bytesRec);
 
                     string response = "";
                     //RUN COMMAND AND GET RESPONSE
-                    SendString(handler, response);
-                    handler.Disconnect(false);
+                    SendString(server, response);
+                    server.Dispose();
                     break;
                 }
             }

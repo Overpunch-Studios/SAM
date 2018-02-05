@@ -30,6 +30,11 @@ namespace SAM_Server
             recognize.Start();
         }
 
+        public void LoadGrammar(string grammar)
+        {
+            SAM.LoadGrammar(SetupGrammar(grammar));
+        }
+
         private void RecognizeThread()
         {
             while (recognize.IsAlive)
@@ -50,6 +55,13 @@ namespace SAM_Server
             synth.SpeakAsync(GetResponse(e.Result.Text.ToString()));
             //TODO: Get the response of the recognized speech of database
             
+        }
+
+        public void Say(string message)
+        {
+            SpeechSynthesizer synth = new SpeechSynthesizer();
+            synth.SetOutputToDefaultAudioDevice();
+            synth.SpeakAsync(message);
         }
 
         private Grammar SetupGrammar(string setting)

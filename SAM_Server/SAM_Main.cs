@@ -22,14 +22,15 @@ namespace SAM_Server
 
         private void SAM_Main_Load(object sender, EventArgs e)
         {
+            sam = new VoiceRecognition("basic");
+            server = new SocketHandler();
             Login();
             GetCommands();
             GetDevices();
-            
-            sam = new VoiceRecognition("advanced");
-            server = new SocketHandler();
+            sam.LoadGrammar("advanced");
             sam.Recognize();
             server.StartServer();
+            sam.Say("S.A.M. Fully Operational!");
         }
 
         private void SendRequest()
@@ -100,7 +101,7 @@ namespace SAM_Server
 
             Program.devices = devices;
 
-            MessageBox.Show($"There are {Program.devices.Length} devices available");
+            sam.Say($"There are {Program.devices.Length} devices available");
         }
 
         private void SAM_Main_Resize(object sender, EventArgs e)

@@ -114,5 +114,10 @@ namespace SAM_Server
             this.WindowState = FormWindowState.Normal;
             this.ShowInTaskbar = true;
         }
+
+        private void SAM_Main_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            notifyIcon.Visible = false;
+        }
     }
 }

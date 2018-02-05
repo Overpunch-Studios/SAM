@@ -17,7 +17,8 @@ namespace SAM_Server
 
         public SocketHandler()
         {
-            port = 8888;
+            IniHandler ini = new IniHandler();
+            port = ini.GetSocketPort();
         }
 
         public void StartServer()

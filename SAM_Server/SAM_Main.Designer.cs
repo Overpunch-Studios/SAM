@@ -51,6 +51,7 @@
             this.Name = "SAM_Main";
             this.ShowInTaskbar = false;
             this.Text = "SAM";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.SAM_Main_FormClosing);
             this.Shown += new System.EventHandler(this.SAM_Main_Load);
             this.Resize += new System.EventHandler(this.SAM_Main_Resize);
             this.ResumeLayout(false);
